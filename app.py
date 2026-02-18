@@ -6,7 +6,7 @@ import pandas as pd
 
 # --- CONFIGURACIÓN DE IA ---
 # Nota: En producción, usaremos "st.secrets" por seguridad
-API_KEY = "PEGA_AQUI_TU_API_KEY_DE_PASO_1"
+API_KEY = "AIzaSyBIrun1rxm_wgHoKMlDcigmn76FM0hl1QY"
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
