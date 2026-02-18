@@ -35,17 +35,17 @@ tab1, tab2 = st.tabs(["📸 Escanear", "📖 Inventario y Recetas"])
 with tab1:
     foto = st.camera_input("Captura un ingrediente")
     if foto:
-    img = Image.open(foto)
-    with st.spinner("Leyendo producto..."):
-        try:
-            # Añadimos un prompt más específico para códigos de barras
-            prompt = "Si ves un código de barras, dime el nombre del producto. Si ves comida, identifícala. Solo el nombre, por favor."
-            res = model.generate_content([prompt, img])
-            nombre_detectado = res.text.strip()
-            # ... resto del código igual
-        except Exception as e:
-            st.error(f"Error de conexión con la IA: {e}")
-            st.info("Asegúrate de que tu API Key sea válida y tengas crédito gratuito en AI Studio.")
+        img = Image.open(foto)
+        with st.spinner("Leyendo producto..."):
+            try:
+                # Añadimos un prompt más específico para códigos de barras
+                prompt = "Si ves un código de barras, dime el nombre del producto. Si ves comida, identifícala. Solo el nombre, por favor."
+                res = model.generate_content([prompt, img])
+                nombre_detectado = res.text.strip()
+                # ... resto del código igual
+            except Exception as e:
+                st.error(f"Error de conexión con la IA: {e}")
+                st.info("Asegúrate de que tu API Key sea válida y tengas crédito gratuito en AI Studio.")
 
 with tab2:
     with conectar() as conn:
