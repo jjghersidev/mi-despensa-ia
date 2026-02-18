@@ -34,7 +34,7 @@ tab1, tab2 = st.tabs(["📸 Escanear", "📖 Inventario y Recetas"])
 
 with tab1:
     foto = st.camera_input("Captura un ingrediente")
-    iif foto:
+    if foto:
     img = Image.open(foto)
     with st.spinner("Leyendo producto..."):
         try:
