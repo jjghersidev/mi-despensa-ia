@@ -7,13 +7,26 @@ import pandas as pd
 # --- CONFIGURACIÓN DE IA ---
 # Nota: En producción, usaremos "st.secrets" por seguridad
 API_KEY = "AIzaSyBIrun1rxm_wgHoKMlDcigmn76FM0hl1QY"
-genai.configure(api_key=API_KEY)
-try:
-    model = genai.GenerativeModel('gemini-1.5-flash')
-except:
-    # Si falla, usamos la versión pro como respaldo
-    model = genai.GenerativeModel('gemini-pro-vision')
+# Lista de modelos por orden de preferencia
+modelos_a_probar = [
+    'gemini-1.5-flash', 
+    'models/gemini-1.5-flash-latest', 
+    'gemini-pro-vision'
+]
 
+model = None
+for nombre_modelo in modelos_a_probar:
+    try:
+        model = genai.GenerativeModel(nombre_modelo)
+        # Hacemos una prueba rápida de texto para ver si este modelo responde
+        model.generate_content("Hola") 
+        print(f"✅ Usando modelo: {nombre_modelo}")
+        break
+    except:
+        continue
+
+if model is None:
+    st.error("No se pudo conectar con ningún modelo de Google. Revisa tu API Key.")
 # --- LÓGICA DE BASE DE DATOS ---
 def conectar():
     return sqlite3.connect('inventario.db', check_same_thread=False)
