@@ -9,7 +9,7 @@ import pandas as pd
 API_KEY = "AIzaSyBIrun1rxm_wgHoKMlDcigmn76FM0hl1QY"
 genai.configure(api_key=API_KEY)
 try:
-    model = genai.GenerativeModel('models/gemini-1.5-flash-latest')
+    model = genai.GenerativeModel('gemini-1.5-flash')
 except:
     # Si falla, usamos la versión pro como respaldo
     model = genai.GenerativeModel('gemini-pro-vision')
