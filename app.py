@@ -8,7 +8,11 @@ import pandas as pd
 # Nota: En producción, usaremos "st.secrets" por seguridad
 API_KEY = "AIzaSyBIrun1rxm_wgHoKMlDcigmn76FM0hl1QY"
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+try:
+    model = genai.GenerativeModel('gemini-1.5-flash')
+except:
+    # Si falla, usamos la versión pro como respaldo
+    model = genai.GenerativeModel('gemini-pro-vision')
 
 # --- LÓGICA DE BASE DE DATOS ---
 def conectar():
@@ -30,18 +34,18 @@ tab1, tab2 = st.tabs(["📸 Escanear", "📖 Inventario y Recetas"])
 
 with tab1:
     foto = st.camera_input("Captura un ingrediente")
-    if foto:
-        img = Image.open(foto)
-        with st.spinner("Identificando..."):
-            prompt = "Identifica este producto alimenticio. Dame solo el nombre (ej: Tomate, Pasta, Leche). Si es un código de barras, dime el producto."
+    iif foto:
+    img = Image.open(foto)
+    with st.spinner("Leyendo producto..."):
+        try:
+            # Añadimos un prompt más específico para códigos de barras
+            prompt = "Si ves un código de barras, dime el nombre del producto. Si ves comida, identifícala. Solo el nombre, por favor."
             res = model.generate_content([prompt, img])
             nombre_detectado = res.text.strip()
-            
-            st.write(f"Detectado: **{nombre_detectado}**")
-            if st.button(f"Confirmar y Guardar {nombre_detectado}"):
-                with conectar() as conn:
-                    conn.execute("INSERT INTO productos (nombre) VALUES (?)", (nombre_detectado,))
-                st.success("¡Guardado!")
+            # ... resto del código igual
+        except Exception as e:
+            st.error(f"Error de conexión con la IA: {e}")
+            st.info("Asegúrate de que tu API Key sea válida y tengas crédito gratuito en AI Studio.")
 
 with tab2:
     with conectar() as conn:
